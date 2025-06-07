@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Sign Up - Threat X-Ray</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap');
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Orbitron', sans-serif;
+    }
+
+    body {
+      background: url('../static/background4.webp') center/cover no-repeat fixed;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      animation: slideUp 1.2s ease-out;
+      overflow: hidden;
+    }
+
+    @keyframes slideUp {
+        from {
+            transform: translateY(100%);
+            opacity: 0;
+        }
+        to {
+            transform: translateY(0);
+            opacity: 1;
+        }
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.4);
+      backdrop-filter: blur(4px);
+      z-index: -1;
+    }
+
+    header, footer {
+      background: rgba(0, 0, 0, 0.5);
+      padding: 15px 50px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 0 10px #00ffcc;
+      position: fixed;
+      width: 100%;
+      z-index: 1000;
+    }
+
+    header {
+      top: 0;
+    }
+
+    footer {
+      bottom: 0;
+      justify-content: center;
+    }
+
+    header h1 {
+      font-size: 26px;
+      letter-spacing: 2px;
+      color: #00ffcc;
+    }
+
+    nav ul {
+      list-style: none;
+      display: flex;
+    }
+
+    nav ul li {
+      margin: 0 20px;
+    }
+
+    nav ul li a {
+      text-decoration: none;
+      color: #00ffcc;
+      font-weight: bold;
+      transition: 0.3s;
+    }
+
+    nav ul li a:hover {
+      color: #ff00ff;
+      text-shadow: 0 0 10px #ff00ff;
+    }
+
+    .split-container {
+      display: flex;
+      flex: 1;
+      height: 100%;
+      margin-top: 80px;
+      margin-bottom: 60px;
+    }
+
+    .left-side, .right-side {
+      width: 50%;
+      padding: 60px;
+    }
+
+    .left-side {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+    }
+
+    .left-side h2,
+    .left-side p,
+    .right-side h1 {
+      color: white;
+      text-shadow: 0 0 6px #00ffcc;
+      transition: all 0.4s ease-in-out;
+    }
+
+    .left-side h2 {
+      font-size: 48px;
+      margin-bottom: 20px;
+    }
+
+    .left-side p {
+      font-size: 22px;
+      margin-bottom: 30px;
+      max-width: 800px;
+    }
+
+    .right-side h1:hover {
+      transform: scale(1.05);
+      text-shadow:
+        0 0 10px #00ffcc,
+        0 0 20px #ff00ff;
+    }
+
+    .right-side {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .right-side h1 {
+      margin-bottom: 20px;
+      font-size: 35px;
+    }
+
+    .right-side input {
+      width: 80%;
+      padding: 12px;
+      margin: 10px 0;
+      border: 1px solid #00ffcc;
+      border-radius: 5px;
+      background: rgba(20, 20, 20, 0.8);
+      color: white;
+      text-shadow: 0 0 6px #00ffcc;
+      font-size: 16px;
+      transition: 0.3s;
+    }
+
+    .right-side input::placeholder {
+      color: #00ffcc;
+      opacity: 0.7;
+    }
+
+    .right-side input:focus {
+      outline: none;
+      border-color: #ff00ff;
+      box-shadow: 0 0 8px #ff00ff;
+    }
+
+    .login-btn {
+      padding: 12px 30px;
+      border: none;
+      background: #00ffcc;
+      color: #0d0d0d;
+      font-size: 18px;
+      cursor: pointer;
+      border-radius: 5px;
+      transition: 0.3s;
+      box-shadow: 0 0 10px #00ffcc;
+      width: 80%;
+      margin-top: 15px;
+    }
+
+    .login-btn:hover {
+      background: #ff00ff;
+      box-shadow: 0 0 15px #ff00ff;
+      color: white;
+    }
+
+    .flash-messages {
+      margin-bottom: 20px;
+      text-align: center;
+    }
+
+    .flash-messages .success {
+      color: #00ffcc;
+    }
+
+    .flash-messages .error {
+      color: #ff00ff;
+    }
+
+    footer p {
+      color: #00ffcc;
+    }
+
+    .hamburger {
+      display: none;
+      cursor: pointer;
+    }
+
+    .hamburger div {
+      width: 30px;
+      height: 4px;
+      background-color: #00ffcc;
+      margin: 6px 0;
+      transition: 0.4s;
+    }
+
+    @media (max-width: 768px) {
+      .split-container {
+        flex-direction: column;
+      }
+
+      .left-side, .right-side {
+        width: 100%;
+        padding: 30px;
+      }
+
+      .right-side input,
+      .login-btn {
+        width: 100%;
+      }
+
+      header {
+        padding: 15px;
+        flex-direction: column;
+        justify-content: center;
+        align-items: flex-start;
+        position: relative;
+      }
+
+      nav ul {
+        display: none;
+        flex-direction: column;
+        width: 100%;
+        margin-top: 10px;
+      }
+
+      nav ul li {
+        text-align: center;
+        margin: 10px 0;
+      }
+
+      nav ul li a {
+        padding: 10px;
+        text-align: center;
+        width: 100%;
+      }
+
+      nav ul.show {
+        display: flex;
+      }
+
+      .hamburger {
+        display: block;
+        position: absolute;
+        right: 15px;
+        top: 18px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Threat X-Ray</h1>
+    <div class="hamburger" onclick="toggleMenu()">
+      <div></div>
+      <div></div>
+      <div></div>
+    </div>
+    <nav>
+      <ul>
+        <li><a href="{{ url_for('home') }}">Home</a></li>
+        <li><a href="{{ url_for('about') }}">About</a></li>
+        <li><a href="{{ url_for('contact') }}">Contact Us</a></li>
+        <li><a href="{{ url_for('scan') }}">Go Back</a></li>
+        <li><a href="{{ url_for('login') }}">Login</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <div class="split-container">
+    <div class="left-side">
+      <h2 data-aos="fade-up" data-aos-delay="300">Scan Files & Links for Threats Instantly</h2>
+      <p data-aos="fade-up" data-aos-delay="600">Protect yourself from malware, phishing, and other cyber threats. Get real-time analysis and stay one step ahead of hackers.</p>
+    </div>
+    <div class="right-side">
+      <h1 data-aos="fade-left" data-aos-delay="400">Sign Up</h1>
+      {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+          <div class="flash-messages">
+            {% for category, message in messages %}
+              <p class="{{ category }}">{{ message }}</p>
+            {% endfor %}
+          </div>
+        {% endif %}
+      {% endwith %}
+      <form method="POST">
+        <input type="text" name="first_name" placeholder="First Name" required data-aos="fade-left" data-aos-delay="500">
+        <input type="text" name="last_name" placeholder="Last Name" required data-aos="fade-left" data-aos-delay="600">
+        <input type="email" name="email" placeholder="Email" required data-aos="fade-left" data-aos-delay="700">
+        <input type="password" name="password" placeholder="Password" required data-aos="fade-left" data-aos-delay="800">
+        <button type="submit" class="login-btn" data-aos="fade-left" data-aos-delay="900">Create Account</button>
+      </form>
+      <p style="margin-top: 20px; color: white;">
+        Already have an account? <a href="{{ url_for('login') }}" style="color: #00ffcc;">Login</a>
+      </p>
+    </div>
+  </div>
+
+  <footer>
+    <p>© 2025 Threat X-Ray | All Rights Reserved</p>
+  </footer>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
+  <script>
+    AOS.init();
+    function toggleMenu() {
+      const navLinks = document.querySelector('nav ul');
+      navLinks.classList.toggle('show');
+    }
+  </script>
+</body>
+</html>

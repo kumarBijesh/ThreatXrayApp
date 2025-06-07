@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>ThreatXRay - Scan Options</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css"/>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap');
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Orbitron', sans-serif;
+    }
+
+    body {
+      background: url('../static/background4.webp') center/cover no-repeat fixed;
+      position: relative;
+      animation: slideUp 1.2s ease-out;
+      overflow: hidden;
+    }
+
+    @keyframes slideUp {
+      from {
+        transform: translateY(100%);
+        opacity: 0;
+      }
+      to {
+        transform: translateY(0);
+        opacity: 1;
+      }
+    }
+
+    body::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.7);
+      z-index: 0;
+    }
+
+    header, footer {
+      background: rgba(0, 0, 0, 0.8); 
+      padding: 15px 50px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 0 10px #00ffcc;
+      position: fixed;
+      width: 100%;
+      z-index: 1000;
+    }
+
+    header {
+      top: 0;
+      left: 0;
+    }
+
+    footer {
+      bottom: 0;
+      left: 0;
+      text-align: center;
+    }
+
+    header h1 {
+      font-size: 26px;
+      letter-spacing: 2px;
+      color: #00ffcc;
+    }
+
+    nav ul {
+      list-style: none;
+      display: flex;
+    }
+
+    nav ul li {
+      margin: 0 20px;
+    }
+
+    nav ul li a {
+      text-decoration: none;
+      color: #00ffcc;
+      font-weight: bold;
+      transition: 0.3s;
+    }
+
+    nav ul li a:hover {
+      color: #ff00ff;
+      text-shadow: 0 0 10px #ff00ff;
+    }
+
+    .main-container {
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      color: white;
+      position: relative;
+      z-index: 1;
+    }
+
+    .button-group {
+      display: flex;
+      gap: 80px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .button-group button {
+      padding: 25px 60px;
+      font-size: 24px;
+      border: none;
+      background: #00ffcc;
+      color: #0d0d0d;
+      cursor: pointer;
+      border-radius: 10px;
+      transition: 0.3s;
+      box-shadow: 0 0 10px #00ffcc;
+    }
+
+    .button-group button:hover {
+      background: #ff00ff;
+      box-shadow: 0 0 12px #ff00ff;
+      color: white;
+    }
+
+    .split-button {
+      display: flex;
+      justify-content: center;
+      gap: 25px;
+      font-size: 24px;
+    }
+
+    .split-button a {
+      color: #0d0d0d;
+      text-decoration: none;
+      position: relative;
+      transition: color 0.3s ease;
+    }
+
+    .split-button a::after {
+      content: '';
+      position: absolute;
+      bottom: -6px;
+      left: 0;
+      width: 0%;
+      height: 2px;
+      background: black;
+      transition: width 0.3s ease;
+    }
+
+    .split-button a:hover::after {
+      width: 100%;
+    }
+
+    footer p {
+      color: #00ffcc;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    @media (max-width: 768px) {
+      header h1 {
+        font-size: 22px;
+      }
+
+      nav ul {
+        flex-direction: column;
+        align-items: center;
+        display: none;
+      }
+
+      nav ul.show {
+        display: flex;
+      }
+
+      .button-group {
+        gap: 40px;
+      }
+
+      .button-group button {
+        padding: 20px 50px;
+        font-size: 20px;
+      }
+
+      .split-button {
+        flex-direction: column;
+        gap: 20px;
+      }
+
+      footer p {
+        font-size: 14px;
+      }
+
+  
+      .hamburger {
+        display: block;
+        cursor: pointer;
+      }
+
+      .hamburger div {
+        width: 30px;
+        height: 4px;
+        background-color: #00ffcc;
+        margin: 6px 0;
+        transition: 0.4s;
+      }
+    }
+
+    @media (max-width: 480px) {
+      header {
+        padding: 10px 20px;
+      }
+
+      header h1 {
+        font-size: 18px;
+      }
+
+      nav ul li {
+        margin: 10px 0;
+      }
+
+      .button-group {
+        gap: 15px;
+      }
+
+      .button-group button {
+        padding: 15px 40px;
+        font-size: 18px;
+      }
+
+      .split-button {
+        gap: 10px;
+      }
+
+      footer p {
+        font-size: 12px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Threat X-Ray</h1>
+    <nav>
+      <ul>
+        <li><a href="home">Home</a></li>
+        <li><a href="about">About</a></li>
+        <li><a HREF="contact">Contact Us</a></li>
+      </ul>
+      <div class="hamburger" onclick="toggleMenu()">
+        <div></div>
+        <div></div>
+        <div></div>
+      </div>
+    </nav>
+  </header>
+
+  <section class="main-container">
+    <div class="button-group">
+      <a href="anonymous">
+        <button data-aos="fade-right" data-aos-delay="500">Anonymous Scan</button>
+      </a>
+      <button data-aos="fade-left" data-aos-delay="1000">
+        <div class="split-button">
+          <a href="signup">Sign Up</a> /
+          <a href="login">Login</a>
+        </div>
+      </button>
+    </div>
+  </section>
+
+  <footer>
+    <p>© 2025 Threat X-Ray | All Rights Reserved</p>
+  </footer>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
+  <script>
+    AOS.init();
+
+
+    function toggleMenu() {
+      const navLinks = document.querySelector('nav ul');
+      navLinks.classList.toggle('show');
+    }
+  </script>
+</body>
+</html>
+

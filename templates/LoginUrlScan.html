@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Scan URL - Threat X-Ray</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap');
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Orbitron', sans-serif;
+    }
+
+    body {
+      background: url('../static/background4.webp') center/cover no-repeat fixed;
+      position: relative;
+      padding-top: 70px;
+      padding-bottom: 60px;
+    }
+
+    body::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.7);
+      z-index: 0;
+    }
+
+    header,
+    footer {
+      background: rgba(0, 0, 0, 0.8);
+      padding: 15px 50px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 0 10px #00ffcc;
+      position: fixed;
+      width: 100%;
+      z-index: 1000;
+      opacity: 0;
+      /* Start hidden for animation */
+    }
+
+    header {
+      top: 0;
+    }
+
+    footer {
+      bottom: 0;
+      text-align: center;
+    }
+
+    header h1,
+    footer p {
+      color: #00ffcc;
+    }
+
+    nav ul {
+      list-style: none;
+      display: flex;
+    }
+
+    nav ul li {
+      margin: 0 20px;
+    }
+
+    nav ul li a {
+      color: #00ffcc;
+      text-decoration: none;
+      font-weight: bold;
+      transition: 0.3s;
+    }
+
+    nav ul li a:hover {
+      color: #ff00ff;
+      text-shadow: 0 0 10px #ff00ff;
+    }
+
+    .main-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      color: white;
+      position: relative;
+      z-index: 1;
+      padding: 40px 20px;
+      flex-direction: column;
+      height: calc(100vh - 130px);
+      overflow-y: auto;
+      opacity: 0;
+      /* Start hidden for animation */
+    }
+
+    h2 {
+      font-size: 40px;
+      margin-bottom: 30px;
+      text-shadow: 0 0 6px #00ffcc;
+    }
+
+    .url-box {
+      background-color: rgba(0, 0, 0, 0.6);
+      padding: 40px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px #00ffcc;
+      width: 90%;
+      max-width: 600px;
+    }
+
+    input[type="text"] {
+      width: 100%;
+      padding: 15px;
+      font-size: 18px;
+      border: 2px dashed #00ffcc;
+      border-radius: 10px;
+      background: rgba(255, 255, 255, 0.1);
+      color: #00ffcc;
+      outline: none;
+      transition: all 0.3s ease;
+      /* Add transition for hover/focus */
+    }
+
+    input[type="text"]::placeholder {
+      color: #00ffcc;
+    }
+
+    input[type="text"]:focus {
+      box-shadow: 0 0 10px #00ffcc;
+      border-color: #ff00ff;
+    }
+
+    .scan-btn {
+      margin-top: 20px;
+      padding: 12px 30px;
+      font-size: 18px;
+      background-color: #00ffcc;
+      border: none;
+      border-radius: 6px;
+      color: #0d0d0d;
+      cursor: pointer;
+      font-weight: bold;
+      box-shadow: 0 0 10px #00ffcc;
+      transition: all 0.3s ease;
+    }
+
+    .scan-btn:hover {
+      background-color: #ff00ff;
+      color: white;
+      box-shadow: 0 0 10px #ff00ff;
+    }
+
+    .loader {
+      border: 8px solid #f3f3f3;
+      border-top: 8px solid #00ffcc;
+      border-radius: 50%;
+      width: 50px;
+      height: 50px;
+      animation: spin 1s linear infinite;
+      margin: 20px auto;
+      display: none;
+      /* Hidden by default */
+    }
+
+    @keyframes spin {
+      0% {
+        transform: rotate(0deg);
+      }
+
+      100% {
+        transform: rotate(360deg);
+      }
+    }
+
+    .result {
+      margin-top: 20px;
+      font-size: 18px;
+      opacity: 0;
+      /* Start hidden for animation */
+      transition: opacity 0.5s ease;
+      /* Fade-in effect */
+    }
+
+    .result.safe {
+      color: rgb(44, 199, 44);
+    }
+
+    .result.malicious {
+      color: red;
+    }
+
+    .menu-icon {
+      display: none;
+      font-size: 30px;
+      color: #00ffcc;
+      cursor: pointer;
+    }
+
+    @media (max-width: 768px) {
+      header h1 {
+        font-size: 20px;
+      }
+
+      nav ul {
+        flex-direction: column;
+        display: none;
+        width: 100%;
+      }
+
+      nav ul li {
+        margin: 10px 0;
+      }
+
+      .menu-icon {
+        display: block;
+      }
+
+      nav.active ul {
+        display: block;
+      }
+    }
+
+    header {
+      top: 0;
+      left: 0;
+      background: rgba(0, 0, 0, 0.8);
+      padding: 15px 50px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 0 10px #00ffcc;
+      position: fixed;
+      width: 100%;
+      z-index: 1000;
+    }
+
+    header h1 {
+      color: #00ffcc;
+    }
+
+    nav ul {
+      list-style: none;
+      display: flex;
+    }
+
+    nav ul li {
+      margin: 0 20px;
+      color: #00ffcc;
+    }
+
+    nav ul li a {
+      color: #00ffcc;
+      text-decoration: none;
+      font-weight: bold;
+      transition: 0.3s;
+    }
+
+    nav ul li a:hover {
+      color: #ff00ff;
+      text-shadow: 0 0 10px #ff00ff;
+    }
+
+    .menu-icon {
+      display: none;
+      font-size: 30px;
+      color: #00ffcc;
+      cursor: pointer;
+    }
+
+    @media (max-width: 768px) {
+      header h1 {
+        font-size: 20px;
+      }
+
+      nav ul {
+        flex-direction: column;
+        display: none;
+        width: 100%;
+      }
+
+      nav ul li {
+        margin: 10px 0;
+      }
+
+      .menu-icon {
+        display: block;
+      }
+
+      nav.active ul {
+        display: block;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <header>
+    <h1>Threat X-Ray</h1>
+    <span class="menu-icon" onclick="toggleMenu()">☰</span>
+    <nav>
+      <ul>
+        <li><a href="{{ url_for('home') }}">Home</a></li>
+        <li><a href="{{ url_for('about') }}">About</a></li>
+        <li><a href="{{ url_for('contact') }}">Contact</a></li>
+
+        {% if session.get('user_id') %}
+        <li style="color: #00ffcc;">Welcome, {{ first_name }}</li>
+        <li><a href="{{ url_for('logout') }}">Logout</a></li>
+        {% else %}
+        <li><a href="{{ url_for('login') }}">Login</a></li>
+        {% endif %}
+
+        <li><a href="{{ url_for('dashboard') }}">Go Back</a></li>
+      </ul>
+    </nav>
+  </header>
+
+
+  <section class="main-container" data-aos="fade-up" data-aos-duration="1000">
+    <h2 data-aos="fade-up">Paste Any URL to Scan</h2>
+    <div class="url-box" data-aos="fade-up" data-aos-delay="200">
+      <input type="text" id="urlInput" placeholder="https://example.com" />
+    </div>
+    <button class="scan-btn" id="scanBtn">Scan</button>
+    <div class="loader" id="loader"></div>
+    <div class="result" id="scanResult"></div>
+  </section>
+
+  <footer data-aos="fade-up" data-aos-duration="1000">
+    <p>© 2025 Threat X-Ray | All Rights Reserved</p>
+  </footer>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
+  <script>
+    // Fade in header, main-container, and footer after page load
+    window.addEventListener('DOMContentLoaded', function() {
+      document.querySelector('header').style.opacity = 1;
+      document.querySelector('.main-container').style.opacity = 1;
+      document.querySelector('footer').style.opacity = 1;
+    });
+
+    AOS.init();
+    function toggleMenu() {
+      const nav = document.querySelector('nav');
+      nav.classList.toggle('active');
+    }
+
+    const scanButton = document.getElementById('scanBtn');
+    const input = document.getElementById('urlInput');
+    const result = document.getElementById('scanResult');
+    const loader = document.getElementById('loader');
+
+    function isValidUrl(string) {
+      // Simplified regex to allow domains like fb.com, www.google.com, etc.
+      const urlPattern = /^(https?:\/\/)?([a-zA-Z0-9-]+\.)*[a-zA-Z0-9-]+\.[a-zA-Z]{2,}(\/.*)?$/;
+      return urlPattern.test(string);
+    }
+
+    // Scan function to reuse logic
+    async function scanUrl(url) {
+      if (!isValidUrl(url)) {
+        loader.style.display = 'none';
+        result.style.opacity = 1;
+        result.textContent = "Scan failed!";
+        result.className = 'result';
+        return;
+      }
+
+      // Add protocol if missing
+      if (!url.startsWith('http://') && !url.startsWith('https://')) {
+        url = 'https://' + url;
+      }
+
+      // Show loader and reset result
+      loader.style.display = 'block';
+      result.style.opacity = 0;
+      result.textContent = "Scanning...";
+      result.className = 'result';
+
+      const formData = new FormData();
+      formData.append('url', url);
+
+      const response = await fetch('/scan', {
+        method: 'POST',
+        body: formData
+      });
+      const data = await response.json();
+
+      // Hide loader and show results with animation
+      loader.style.display = 'none';
+      result.style.opacity = 1;
+      if (data.status === 'success') {
+        const totalThreats = data.results.malicious + data.results.suspicious;
+        result.textContent = '';
+        result.innerHTML = `Scan completed!<br>
+          Malicious: ${data.results.malicious}<br>
+          Suspicious: ${data.results.suspicious}<br>
+          Harmless: ${data.results.harmless}<br>
+          Undetected: ${data.results.undetected}<br>
+          Status: `;
+        if (totalThreats > 0) {
+          result.innerHTML += '<span class="malicious">IRL is Malicious</span>';
+          result.className = 'result malicious';
+        } else {
+          result.innerHTML += '<span class="safe">URL is Safe</span>';
+          result.className = 'result safe';
+        }
+      } else {
+        result.textContent = `Scan failed! ${data.message}`;
+        result.className = 'result';
+      }
+    }
+
+    // Button click event
+    scanButton.addEventListener('click', () => {
+      const url = input.value.trim();
+      if (!url) {
+        loader.style.display = 'none';
+        result.style.opacity = 1;
+        result.textContent = "Please enter a valid URL.";
+        result.className = 'result';
+        return;
+      }
+      scanUrl(url);
+    });
+
+    // Enter key event
+    input.addEventListener('keypress', (e) => {
+      if (e.key === 'Enter') {
+        e.preventDefault(); // Prevent form submission if it exists
+        const url = input.value.trim();
+        if (!url) {
+          loader.style.display = 'none';
+          result.style.opacity = 1;
+          result.textContent = "Please enter a valid URL.";
+          result.className = 'result';
+          return;
+        }
+        scanUrl(url);
+      }
+    });
+  </script>
+</body>
+
+</html>

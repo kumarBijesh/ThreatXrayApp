@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Scan Any File - Threat X-Ray</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap');
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Orbitron', sans-serif;
+    }
+
+    body {
+      background: url('../static/background4.webp') center/cover no-repeat fixed;
+      position: relative;
+      padding-top: 70px;
+      padding-bottom: 60px;
+    }
+
+    body::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.7);
+      z-index: 0;
+    }
+
+    header,
+    footer {
+      background: rgba(0, 0, 0, 0.8);
+      padding: 15px 50px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 0 10px #00ffcc;
+      position: fixed;
+      width: 100%;
+      z-index: 1000;
+    }
+
+    header {
+      top: 0;
+    }
+
+    footer {
+      bottom: 0;
+      text-align: center;
+    }
+
+    header h1,
+    footer p {
+      color: #00ffcc;
+    }
+
+    nav ul {
+      list-style: none;
+      display: flex;
+    }
+
+    nav ul li {
+      margin: 0 20px;
+    }
+
+    nav ul li a {
+      color: #00ffcc;
+      text-decoration: none;
+      font-weight: bold;
+      transition: 0.3s;
+    }
+
+    nav ul li a:hover {
+      color: #ff00ff;
+      text-shadow: 0 0 10px #ff00ff;
+    }
+
+    .main-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      color: white;
+      position: relative;
+      z-index: 1;
+      padding: 40px 20px;
+      flex-direction: column;
+      /* height: calc(100vh - 130px); */
+      min-height: 100vh;
+      overflow: visible;
+    }
+
+    h2 {
+      font-size: 40px;
+      margin-bottom: 20px;
+      text-shadow: 0 0 6px #00ffcc;
+    }
+
+    .upload-box {
+      border: 2px dashed #00ffcc;
+      padding: 40px;
+      background-color: rgba(0, 0, 0, 0.6);
+      border-radius: 10px;
+      cursor: pointer;
+      transition: 0.3s;
+      width: 90%;
+      max-width: 600px;
+    }
+
+    .upload-box:hover {
+      background-color: rgba(0, 255, 204, 0.1);
+    }
+
+    .upload-box input {
+      display: none;
+    }
+
+    .upload-text {
+      font-size: 18px;
+      margin-top: 10px;
+      color: #00ffcc;
+    }
+
+    .file-preview {
+      margin-top: 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      color: white;
+    }
+
+    .file-preview .file-name {
+      margin-top: 10px;
+      font-size: 16px;
+    }
+
+    .remove-file {
+      font-size: 20px;
+      color: red;
+      cursor: pointer;
+    }
+
+    .progress-container {
+      width: 90%;
+      max-width: 600px;
+      background: rgba(255, 255, 255, 0.1);
+      margin-top: 30px;
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 0 0 10px #00ffcc;
+    }
+
+    .progress-bar {
+      height: 20px;
+      width: 0%;
+      background: #00ffcc;
+      transition: width 1s linear;
+      text-align: center;
+      line-height: 20px;
+      color: #0d0d0d;
+      font-size: 12px;
+    }
+
+    .scan-btn,
+    .export-btn,
+    .retry-btn {
+      margin-top: 20px;
+      padding: 12px 30px;
+      font-size: 18px;
+      background-color: #00ffcc;
+      border: none;
+      border-radius: 6px;
+      color: #0d0d0d;
+      cursor: pointer;
+      font-weight: bold;
+      box-shadow: 0 0 10px #00ffcc;
+    }
+
+    .scan-btn:hover,
+    .export-btn:hover,
+    .retry-btn:hover {
+      background-color: #ff00ff;
+      color: white;
+      box-shadow: 0 0 10px #ff00ff;
+    }
+
+    .retry-btn {
+      display: none;
+    }
+
+    .result {
+      margin-top: 20px;
+      font-size: 18px;
+      color: #00ffcc;
+    }
+
+    .menu-icon {
+      display: none;
+      font-size: 30px;
+      color: #00ffcc;
+      cursor: pointer;
+    }
+
+    @media (max-width: 768px) {
+      h2 {
+        font-size: 30px;
+      }
+
+      .upload-box {
+        padding: 30px;
+      }
+
+      .upload-text {
+        font-size: 16px;
+      }
+
+      header h1 {
+        font-size: 20px;
+      }
+
+      nav ul {
+        flex-direction: column;
+        display: none;
+        width: 100%;
+      }
+
+      nav ul li {
+        margin: 10px 0;
+      }
+
+      .menu-icon {
+        display: block;
+      }
+
+      nav.active ul {
+        display: block;
+      }
+    }
+
+    html,
+    body {
+      height: auto;
+      overflow-y: auto;
+    }
+  </style>
+</head>
+
+<body>
+  <header>
+    <h1>Threat X-Ray</h1>
+    <span class="menu-icon" onclick="toggleMenu()">☰</span>
+    <nav>
+      <ul>
+        <li><a href="{{ url_for('home') }}">Home</a></li>
+        <li><a href="{{ url_for('about') }}">About</a></li>
+        <li><a href="{{ url_for('contact') }}">Contact</a></li>
+        <li><a href="{{ url_for('login') }}">Login</a></li>
+        <li><a href="{{ url_for('anonUrlScan') }}">Go Back</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <section class="main-container">
+    <h2 data-aos="fade-up">Upload Any File to Scan</h2>
+    <label for="fileInput" class="upload-box" data-aos="fade-up" data-aos-delay="200">
+      <input type="file" id="fileInput" />
+      <div class="upload-text">Click to Upload Document, ZIP, PDF, or Code File</div>
+    </label>
+
+    <div class="file-preview" id="filePreview"></div>
+
+    <div class="progress-container" data-aos="fade-up" data-aos-delay="500">
+      <div class="progress-bar" id="progressBar">0%</div>
+    </div>
+
+    <button class="scan-btn" id="scanBtn" disabled>Scan</button>
+    <button class="export-btn" id="exportBtn" style="display: none;">Export to PDF</button>
+    <button class="retry-btn" id="retryBtn" onclick="retryScan()">Retry Scan</button>
+    <div class="result" id="scanResult"></div>
+  </section>
+
+  <footer>
+    <p>© 2025 Threat X-Ray | All Rights Reserved</p>
+  </footer>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
+  <script>
+    AOS.init();
+    function toggleMenu() {
+      const nav = document.querySelector('nav');
+      nav.classList.toggle('active');
+    }
+
+    const fileInput = document.getElementById('fileInput');
+    const filePreview = document.getElementById('filePreview');
+    const progressBar = document.getElementById('progressBar');
+    const scanBtn = document.getElementById('scanBtn');
+    const exportBtn = document.getElementById('exportBtn');
+    const retryBtn = document.getElementById('retryBtn');
+    const scanResult = document.getElementById('scanResult');
+    let isScanning = false;
+    let startTime;
+
+    function updateProgress() {
+      if (isScanning) {
+        const elapsed = Math.floor((Date.now() - startTime) / 1000);
+        const percent = Math.min((elapsed / 120) * 100, 100);
+        progressBar.style.width = `${percent}%`;
+        progressBar.textContent = `${Math.floor(percent)}%`;
+        if (elapsed < 120) requestAnimationFrame(updateProgress);
+      }
+    }
+
+    function retryScan() {
+      scanResult.textContent = '';
+      exportBtn.style.display = 'none';
+      retryBtn.style.display = 'none';
+      progressBar.style.width = '0%';
+      progressBar.textContent = '0%';
+      scanBtn.click();
+    }
+
+    fileInput.addEventListener('change', function () {
+      if (fileInput.files.length > 0) {
+        const file = fileInput.files[0];
+        const fileName = document.createElement('span');
+        fileName.className = 'file-name';
+        fileName.textContent = file.name;
+
+        const removeBtn = document.createElement('span');
+        removeBtn.textContent = ' ❌';
+        removeBtn.classList.add('remove-file');
+        removeBtn.onclick = function () {
+          filePreview.innerHTML = '';
+          fileInput.value = '';
+          progressBar.style.width = '0%';
+          progressBar.textContent = '0%';
+          scanBtn.disabled = true;
+          exportBtn.style.display = 'none';
+          retryBtn.style.display = 'none';
+          scanResult.textContent = '';
+        };
+
+        filePreview.innerHTML = '';
+        filePreview.appendChild(fileName);
+        filePreview.appendChild(removeBtn);
+
+        scanBtn.disabled = false;
+      }
+    });
+
+    scanBtn.addEventListener('click', async () => {
+      const file = fileInput.files[0];
+      if (!file) return;
+
+      if (isScanning) {
+        scanResult.textContent = 'A scan is already in progress. Please wait...';
+        scanResult.style.color = '#ff00ff';
+        return;
+      }
+
+      isScanning = true;
+      scanBtn.disabled = true;
+      scanResult.textContent = '';
+      exportBtn.style.display = 'none';
+      retryBtn.style.display = 'none';
+      progressBar.style.width = '0%';
+      progressBar.textContent = '0%';
+      startTime = Date.now();
+      requestAnimationFrame(updateProgress);
+
+      const formData = new FormData();
+      formData.append('file', file);
+
+      try {
+        const response = await fetch('/file_scan', {
+          method: 'POST',
+          body: formData,
+          signal: AbortSignal.timeout(125000)
+        });
+
+        if (!response.ok) {
+          throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+
+        const data = await response.json();
+        scanResult.innerHTML = `<pre>${data.scan_result}\n${data.metadata}</pre>`;
+
+        progressBar.style.width = '100%';
+        progressBar.textContent = '100%';
+
+        if (data.scan_result.includes("MALICIOUS") || data.scan_result.includes("SUSPICIOUS")) {
+          scanResult.style.color = 'red';
+        } else {
+          scanResult.style.color = 'rgb(50, 227, 34)';
+        }
+
+        if (data.pdf_url) {
+          exportBtn.dataset.pdfUrl = data.pdf_url;
+          exportBtn.style.display = 'block';
+        }
+      } catch (error) {
+        progressBar.style.width = '100%';
+        progressBar.textContent = '100%';
+
+        if (error.name === 'AbortError') {
+          scanResult.textContent = 'Scan timed out after 2 minutes. A partial report may be available.';
+          scanResult.style.color = '#ff00ff';
+          retryBtn.style.display = 'block';
+        } else {
+          scanResult.textContent = `Scan failed! ${error.message}`;
+          scanResult.style.color = '#00ffcc';
+        }
+      }
+      finally {
+        isScanning = false;
+        scanBtn.disabled = false;
+      }
+    });
+
+
+    exportBtn.addEventListener('click', () => {
+      const pdfUrl = exportBtn.dataset.pdfUrl;
+      if (pdfUrl) {
+        const link = document.createElement('a');
+        link.href = pdfUrl;
+        link.download = '';
+        link.click();
+      } else {
+        scanResult.textContent = 'Error: PDF URL not found';
+        scanResult.style.color = '#00ffcc';
+      }
+    });
+  </script>
+</body>
+
+</html>
